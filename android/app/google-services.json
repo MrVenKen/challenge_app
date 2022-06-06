@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "350526361598",
+    "project_id": "karbon-challenge",
+    "storage_bucket": "karbon-challenge.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:350526361598:android:f5c7fd85a460644c14faaf",
+        "android_client_info": {
+          "package_name": "com.example.challenge_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "350526361598-iebudq5cs7a7fpdpjnjg7ur692082qvr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFcwBUoJyCL2iTGSL6tKkspg8ynMDLHbY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "350526361598-iebudq5cs7a7fpdpjnjg7ur692082qvr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
