@@ -1,24 +1,28 @@
+import 'package:challenge_app/core/base_view.dart';
 import 'package:challenge_app/viewmodel/homepage_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-   HomePage({Key? key}) : super(key: key);
+  HomePage({Key? key, this.result}) : super(key: key);
 
 
-   late final String result;
+  String? result;
    void _getCurrentLocation(BuildContext context) async {
-     result = await Provider.of<HomePageViewModel>(context, listen: false).getCurrentLocation();
+     result = await Provider.of<HomePageViewModel>(context, listen: false).getCurrentLocation(
+     );
    }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, HomePageViewModel model, _) {
+    return BaseView<HomePageViewModel>(onModelReady: (viewmodel){
+      viewmodel.getCurrentLocation();
+    },builder: (context, viewmodel, child){
       return SafeArea(
         child: Scaffold(
             appBar: AppBar(
               title:
-                  const Center(child: Text("Karbon Solutions Challenge App")),
+              const Center(child: Text("Karbon Solutions Challenge App")),
             ),
             body: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -32,21 +36,21 @@ class HomePage extends StatelessWidget {
                   height: 26,
                 ),
                 Center(
-                  child: model.position != null
+                  child: viewmodel.position != null
                       ? Text('\nMevcut Konum: \n$result')
                       : const Text(
-                          'Konum tespit etmek için sağ alttaki butona tıklayın'),
+                      'Konum tespit etmek için sağ alttaki butona tıklayın'),
                 ),
               ],
             ),
             floatingActionButton: Stack(
               children: <Widget>[
-                 Padding(
+                Padding(
                   padding: const EdgeInsets.only(left: 31),
                   child: Align(
                     alignment: Alignment.bottomLeft,
                     child: FloatingActionButton(
-                      onPressed: () => model.firebaseSaveData(context),
+                      onPressed: () => viewmodel.firebaseSaveData(context),
                       child: const Icon(Icons.save),
                     ),
                   ),

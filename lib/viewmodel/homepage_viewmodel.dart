@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:challenge_app/core/base_viewmodel.dart';
 import 'package:challenge_app/service/time_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -5,10 +7,13 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:vexana/vexana.dart';
 
+class HomePageViewModel extends BaseViewModel {
 
-class HomePageViewModel extends ChangeNotifier {
+  late StreamSubscription<Position> positionStream;
+
 
   final TimeService _timeService = TimeServiceApi(
+    //Saat Servisi
     NetworkManager(
       isEnableLogger: true,
       options: BaseOptions(
@@ -17,37 +22,52 @@ class HomePageViewModel extends ChangeNotifier {
     ),
   );
 
-
-
-
-
   Position? _position;
 
   Position? get position => _position;
 
-  void _getCurrentLocation() async {
-    notifyListeners();
-    Position position = await _determinePosition();
-    _position = position;
-    convertLatLng(position.longitude, false);
-    convertLatLng(position.latitude, true);
-    print(convertLatLng(position.longitude, false));
-    print(convertLatLng(position.latitude, true));
-    notifyListeners();
-  }
-
   Future<String> getCurrentLocation() async {
+    // Konum Tespiti
     notifyListeners();
-    Position position = await _determinePosition();
+
+    Position position = await _determinePosition(
+    );
     _position = position;
-    String result = '\n${convertLatLng(position.longitude, false)}\n${convertLatLng(position.latitude, true)}';
+    String result =
+        '\n${convertLatLng(position.longitude, false)}\n${convertLatLng(position.latitude, true)}';
     print(convertLatLng(position.longitude, false));
     print(convertLatLng(position.latitude, true));
+
+
+    const LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 1,
+    );
+     positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+      //Konumun Güncellenmesi
+            (Position position) {
+          print("Updated position");
+          print(position == null ? 'Unknown' : '${position.latitude}, ${position.longitude}');
+        });
+
+    positionStream.onData((data) {
+      notifyListeners();
+      print("Data");
+      print(data == null ? 'Unknown' : '${data.longitude}, ${data.latitude}');
+      '\n${convertLatLng(data.longitude, false)}\n${convertLatLng(data.latitude, true)}';
+      print(convertLatLng(data.longitude, false));
+      print(convertLatLng(data.latitude, true));
+      notifyListeners();
+    });
     notifyListeners();
     return result;
   }
 
-  Future<Position> _determinePosition() async {
+  Future<Position> _determinePosition(
+
+      //Konum izin kontrolü
+      ) async {
+
     notifyListeners();
     LocationPermission permission;
 
@@ -64,6 +84,7 @@ class HomePageViewModel extends ChangeNotifier {
   }
 
   String convertLatLng(double decimal, bool isLat) {
+    //Konum Verisi WGS84 Standartına Dönüştürme
     notifyListeners();
     String degree = "${decimal.toString().split(".")[0]}°";
     double minutesBeforeConversion =
@@ -80,7 +101,8 @@ class HomePageViewModel extends ChangeNotifier {
     return dmsOutput;
   }
 
-   firebaseSaveData(BuildContext context) async {
+  firebaseSaveData(BuildContext context) async {
+    //Veritabanı Kaydetme
     notifyListeners();
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     CollectionReference locationRef =
@@ -98,6 +120,5 @@ class HomePageViewModel extends ChangeNotifier {
     });
     notifyListeners();
   }
-
-
 }
+

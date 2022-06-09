@@ -16,6 +16,7 @@ class TimeServiceApi extends TimeService {
 
   @override
   Future<IResponseModel<TimeModel?>> getTime() async{
+    //API Get İstek
     final response = await networkManager.send<TimeModel, TimeModel>(
         '/Time/current/zone?timeZone=Europe/Istanbul',
         parseModel: TimeModel(),

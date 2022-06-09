@@ -3,6 +3,7 @@ import 'package:challenge_app/viewmodel/homepage_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'locator.dart';
 import 'view/home_page.dart';
 
 void main() async {
@@ -10,6 +11,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  setupLocator();
   runApp(MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => HomePageViewModel())],
       child: const MyApp()));
@@ -17,6 +19,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
 
 
   @override
