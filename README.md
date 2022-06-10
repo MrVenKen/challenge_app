@@ -1,6 +1,6 @@
 # challenge_app
 
-A new Flutter challenge project for Karbon Solutions.
+A new Flutter challenge project.
 
 ## Getting Started
 
